@@ -1,0 +1,33 @@
+name: Update Studio Description
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  update-description:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.12.0-rc.2' # Specify the desired Python version
+
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip
+
+      - name: Install dependencies
+        run: pip install scratchclient
+
+      - name: Run Python script
+        env:
+          SCRATCH_PASSWORD: ${{ secrets.SCRATCH_PASSWORD }} # Use the secret
+        run: python main.py
